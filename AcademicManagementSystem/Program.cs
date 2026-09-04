@@ -27,7 +27,7 @@ namespace AcademicManagementSystem
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Home}/{action=Index}/{id?}")
+                pattern: "{controller=ABC}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
