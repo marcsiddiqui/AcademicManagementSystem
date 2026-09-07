@@ -6,4 +6,30 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="wwwroot\assets\css\main.css" />
+    <None Include="wwwroot\assets\images\avatar.png" />
+    <None Include="wwwroot\assets\images\favicon.ico" />
+    <None Include="wwwroot\assets\images\spark-admin-free.png" />
+    <None Include="wwwroot\assets\images\user_1.jpg" />
+    <None Include="wwwroot\assets\images\user_2.jpg" />
+    <None Include="wwwroot\assets\images\user_3.jpg" />
+    <None Include="wwwroot\assets\images\user_4.jpg" />
+    <None Include="wwwroot\assets\images\user_5.jpg" />
+    <None Include="wwwroot\assets\images\user_6.jpg" />
+    <None Include="wwwroot\assets\images\user_7.jpg" />
+    <None Include="wwwroot\assets\images\user_8.jpg" />
+    <None Include="wwwroot\assets\js\auth.js" />
+    <None Include="wwwroot\assets\js\dashboard.js" />
+    <None Include="wwwroot\assets\libs\apexcharts\apexcharts.css" />
+    <None Include="wwwroot\assets\libs\apexcharts\apexcharts.min.js" />
+    <None Include="wwwroot\assets\libs\bootstrap-icons\bootstrap-icons.css" />
+    <None Include="wwwroot\assets\libs\bootstrap-icons\fonts\bootstrap-icons.woff" />
+    <None Include="wwwroot\assets\libs\bootstrap-icons\fonts\bootstrap-icons.woff2" />
+    <None Include="wwwroot\assets\libs\bootstrap\css\bootstrap.min.css" />
+    <None Include="wwwroot\assets\libs\bootstrap\js\bootstrap.bundle.min.js" />
+    <None Include="wwwroot\assets\libs\flatpickr\flatpickr.min.css" />
+    <None Include="wwwroot\assets\libs\flatpickr\flatpickr.min.js" />
+  </ItemGroup>
+
 </Project>
