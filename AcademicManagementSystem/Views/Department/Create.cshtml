@@ -1,0 +1,31 @@
+﻿@model AcademicManagementSystem.Models.DepartmentModel
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Add New Department</h1>
+        <p class="page-subtitle">An easy way to manage departments.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+
+    <!-- Column 1: Basic controls -->
+    <div class="col-12 col-lg-6">
+        <div class="card border-light shadow-sm p-4 h-100">
+            <h5 class="card-title mb-4">Department Info</h5>
+
+            <!-- Text input -->
+            <div class="mb-3">
+                <label asp-for="@Model.Name" class="form-label-custom"></label>
+                <input type="text" asp-for="@Model.Name" class="form-control-custom" placeholder="Enter Name" />
+            </div>
+
+            <div class="form-check-custom">
+                <input type="checkbox" asp-for="@Model.IsActive" class="form-check-input-custom" />
+                <label asp-for="@Model.IsActive" class="form-check-label"></label>
+            </div>
+
+        </div>
+    </div>
+
+</div>
