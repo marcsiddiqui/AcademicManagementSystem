@@ -1,0 +1,26 @@
+﻿@model AcademicManagementSystem.Models.CourseModel
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Add New Course</h1>
+        <p class="page-subtitle">An easy way to manage courses.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+
+    <!-- Column 1: Basic controls -->
+    <div class="col-12 col-lg-6">
+        <div class="card border-light shadow-sm p-4 h-100">
+            <h5 class="card-title mb-4">Course Info</h5>
+
+            <form asp-action="Create" method="post">
+
+                <partial name="_CreateOrUpdate" />
+
+            </form>
+
+        </div>
+    </div>
+
+</div>
