@@ -59,9 +59,8 @@
                         <td><span class="badge-table @(department.IsActive ? "success" : "failed")">@(department.IsActive ? "Active" : "In Active")</span></td>
                         <td>
                             <div class="d-flex justify-content-center gap-1">
-                                <a href="#" class="table-btn-action" title="View details"><i class="bi bi-eye"></i></a>
-                                <a href="#" class="table-btn-action" title="Edit row"><i class="bi bi-pencil"></i></a>
-                                <a href="#" class="table-btn-action delete" title="Delete row"><i class="bi bi-trash"></i></a>
+                                <a title="Edit row" class="table-btn-action" asp-area="" asp-controller="Department" asp-action="Detail" asp-route-id="@department.Id"><i class="bi bi-pencil"></i></a>
+                                <a title="Delete row" class="table-btn-action delete" asp-area="" asp-controller="Department" asp-action="Delete" asp-route-id="@department.Id"><i class="bi bi-trash"></i></a>
                             </div>
                         </td>
                     </tr>

@@ -1,0 +1,14 @@
+﻿@model AcademicManagementSystem.Models.DepartmentModel
+
+<div class="mb-3">
+    <label asp-for="@Model.Name" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.Name" class="form-control-custom" placeholder="Enter Name" />
+    <span asp-validation-for="@Model.Name" class="alert-custom-content"></span>
+</div>
+
+<div class="form-check-custom">
+    <input type="checkbox" asp-for="@Model.IsActive" class="form-check-input-custom" />
+    <label asp-for="@Model.IsActive" class="form-check-label"></label>
+</div>
+
+<button class="btn-custom btn-custom-primary" type="submit">Save Department</button>

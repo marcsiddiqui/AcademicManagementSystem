@@ -14,9 +14,16 @@
         <div class="card border-light shadow-sm p-4 h-100">
             <h5 class="card-title mb-4">Department Info</h5>
 
-            <form asp-action="Create" method="post">
+            <form asp-action="Delete" method="post">
 
-                <partial name="_CreateOrUpdate" />
+                <input type="hidden" asp-for="Id" />
+
+                <h4>Are you sure you want to delete Department @Model.Name?</h4>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn-custom btn-custom-danger">Delete</button>
+                    <a asp-action="Index" class="btn-custom btn-custom-secondary">Cancel</a>
+                </div>
 
             </form>
 
