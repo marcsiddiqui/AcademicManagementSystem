@@ -1,0 +1,55 @@
+﻿@model AcademicManagementSystem.Models.StudentModel
+
+<div class="mb-3">
+    <label asp-for="@Model.FullName" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.FullName" class="form-control-custom" placeholder="Enter Full Name" />
+    <span asp-validation-for="@Model.FullName" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.Gender" class="form-label-custom"></label>
+    <select asp-for="@Model.Gender" class="form-control-custom" placeholder="Select Gender">
+        @foreach (var gender in Model.AvailableGenders)
+        {
+            <option value="@gender.Value" selected="@gender.Selected">@gender.Text</option>
+        }
+    </select>
+    <span asp-validation-for="@Model.Gender" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.Email" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.Email" class="form-control-custom" placeholder="Enter Email" />
+    <span asp-validation-for="@Model.Email" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.Phone" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.Phone" class="form-control-custom" placeholder="Enter Phone" />
+    <span asp-validation-for="@Model.Phone" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.Address" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.Address" class="form-control-custom" placeholder="Enter Address" />
+    <span asp-validation-for="@Model.Address" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.DateOfBirth" class="form-label-custom"></label>
+    <input type="date" asp-for="@Model.DateOfBirth" class="form-control-custom" placeholder="Enter Date of Birth" />
+    <span asp-validation-for="@Model.DateOfBirth" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.AdmissionDate" class="form-label-custom"></label>
+    <input type="date" asp-for="@Model.AdmissionDate" class="form-control-custom" placeholder="Enter Admission Date" />
+    <span asp-validation-for="@Model.AdmissionDate" class="alert-custom-content"></span>
+</div>
+
+<div class="form-check-custom">
+    <input type="checkbox" asp-for="@Model.IsActive" class="form-check-input-custom" />
+    <label asp-for="@Model.IsActive" class="form-check-label"></label>
+</div>
+
+<button class="btn-custom btn-custom-primary" type="submit">Save Student</button>

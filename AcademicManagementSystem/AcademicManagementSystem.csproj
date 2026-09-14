@@ -40,8 +40,4 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="SQL_Queries\" />
-  </ItemGroup>
-
 </Project>
