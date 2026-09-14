@@ -9,10 +9,9 @@
 <div class="mb-3">
     <label asp-for="@Model.DepartmentId" class="form-label-custom"></label>
     <select asp-for="@Model.DepartmentId" class="form-control-custom" placeholder="Select Department">
-        <option value="">Select Department</option>
         @foreach (var department in Model.AvailableDepartments)
         {
-            <option value="@department.Value">@department.Text</option>
+            <option value="@department.Value" selected="@department.Selected">@department.Text</option>
         }
     </select>
     <span asp-validation-for="@Model.DepartmentId" class="alert-custom-content"></span>

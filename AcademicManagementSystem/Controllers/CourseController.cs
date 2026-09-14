@@ -21,22 +21,63 @@ namespace AcademicManagementSystem.Controllers
         {
             var model = new CourseListModel();
 
+            #region Without Join
+
+#if true
             var courses = _dbContext.Courses.ToList();
+            var departments = _dbContext.Departments.ToList();
 
             if (courses != null && courses.Any())
             {
                 foreach (var course in courses)
                 {
+                    var department = departments != null && departments.Any() ? departments.FirstOrDefault(x => x.Id == course.DepartmentId) : null;
+
                     var courseModel = new CourseModel
                     {
                         Id = course.Id,
                         Name = course.Name,
-                        Fee = course.Fee
+                        Fee = course.Fee,
+                        DepartmentId = course.DepartmentId,
+                        DepartmentName = department != null ? department.Name : string.Empty
                     };
 
                     model.Courses.Add(courseModel);
                 }
             }
+#endif
+
+            #endregion
+
+            #region With Join
+
+#if false
+
+            var data = from c in _dbContext.Courses
+                       join d in _dbContext.Departments on c.DepartmentId equals d.Id
+                       select new { c.Id, c.Name, c.Fee, c.DepartmentId, DepartmentName = d.Name };
+
+            if (data != null && data.Any())
+            {
+                foreach (var course in data)
+                {
+                    var courseModel = new CourseModel
+                    {
+                        Id = course.Id,
+                        Name = course.Name,
+                        Fee = course.Fee,
+                        DepartmentId = course.DepartmentId,
+                        DepartmentName = course.DepartmentName
+                    };
+
+                    model.Courses.Add(courseModel);
+                }
+            }
+
+#endif
+
+
+            #endregion
 
 
             return View(model);
@@ -44,17 +85,9 @@ namespace AcademicManagementSystem.Controllers
 
         public async Task<IActionResult> Create()
         {
-            var departments = await _dbContext.Departments.ToListAsync();
-
             var model = new CourseModel();
 
-            model.AvailableDepartments = departments.Select(d => 
-            new SelectListItem
-            {
-                Value = d.Id.ToString(),
-                Text = d.Name
-            }).ToList();
-
+            PrepareAvailableDepartments(model);
 
             return View(model);
         }
@@ -97,8 +130,11 @@ namespace AcademicManagementSystem.Controllers
             {
                 Id = course.Id,
                 Name = course.Name,
-                Fee = course.Fee
+                Fee = course.Fee,
+                DepartmentId = course.DepartmentId
             };
+
+            PrepareAvailableDepartments(model);
 
             return View(model);
         }
@@ -118,6 +154,7 @@ namespace AcademicManagementSystem.Controllers
             {
                 course.Name = model.Name;
                 course.Fee = model.Fee;
+                course.DepartmentId = model.DepartmentId;
 
                 _dbContext.SaveChanges();
 
@@ -157,6 +194,28 @@ namespace AcademicManagementSystem.Controllers
             _dbContext.SaveChanges();
 
             return RedirectToAction("Index");
+        }
+
+        public void PrepareAvailableDepartments(CourseModel model)
+        {
+            var departments = _dbContext.Departments.Where(x => x.IsActive).ToList();
+
+            model.AvailableDepartments.Add(new SelectListItem
+            {
+                Value = "0",
+                Text = "Select Department"
+            });
+
+            if (departments != null && departments.Any())
+            {
+                model.AvailableDepartments.AddRange(departments.Select(d =>
+                new SelectListItem
+                {
+                    Value = d.Id.ToString(),
+                    Text = d.Name,
+                    Selected = d.Id == model.DepartmentId
+                }).ToList());
+            }
         }
     }
 }

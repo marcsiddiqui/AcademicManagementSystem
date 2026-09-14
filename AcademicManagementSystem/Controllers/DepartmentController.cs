@@ -131,6 +131,10 @@ namespace AcademicManagementSystem.Controllers
             if (department == null)
                 return RedirectToAction("Index");
 
+            var hasCoursesConnected = await _dbContext.Courses.AnyAsync(x => x.DepartmentId == department.Id);
+            if (hasCoursesConnected)
+                return RedirectToAction("Index");
+
             var model = new DepartmentModel
             {
                 Id = department.Id,
