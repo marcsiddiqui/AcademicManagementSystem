@@ -9,6 +9,8 @@ namespace AcademicManagementSystem.DatabaseConfiguration
         public DbSet<Department> Departments { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Student { get; set; }
+        public DbSet<Enrollment> Enrollment { get; set; }
+
         // Define your DbSets for your entities here
         // Example:
         // public DbSet<Student> Students { get; set; }

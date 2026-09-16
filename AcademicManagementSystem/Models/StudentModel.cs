@@ -16,7 +16,7 @@ namespace AcademicManagementSystem.Models
         [DisplayName("Full Name")]
         [StringLength(50, MinimumLength = 3)]
         [Required(ErrorMessage = "Full Name is required!")]
-        public string FullName { get; set; }
+        public string StudentFullName { get; set; }
 
         [DisplayName("Email")]
         [StringLength(50, MinimumLength = 3)]

@@ -1,5 +1,6 @@
 ﻿using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
+using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;

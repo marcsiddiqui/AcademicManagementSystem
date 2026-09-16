@@ -1,5 +1,6 @@
 ﻿using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,10 +12,15 @@ namespace AcademicManagementSystem.Controllers
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
+        private readonly IMapper _mapper;
 
-        public StudentController(ApplicationDbContext dbContext)
+        public StudentController(
+            ApplicationDbContext dbContext,
+            IMapper mapper
+            )
         {
             _dbContext = dbContext;
+            _mapper = mapper;
         }
 
         public IActionResult Index()
@@ -27,17 +33,7 @@ namespace AcademicManagementSystem.Controllers
             {
                 foreach (var student in students)
                 {
-                    var studentModel = new StudentModel
-                    {
-                        Id = student.Id,
-                        FullName = student.FullName,
-                        Email = student.Email,
-                        Phone = student.Phone,
-                        Gender = student.Gender,
-                        DateOfBirth = student.DateOfBirth,
-                        Address = student.Address,
-                        AdmissionDate = student.AdmissionDate
-                    };
+                    var studentModel = _mapper.Map<StudentModel>(student);
 
                     model.Students.Add(studentModel);
                 }
@@ -62,27 +58,17 @@ namespace AcademicManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(StudentModel model)
         {
-            bool isValid = Regex.IsMatch(model.FullName , @"^[\p{L}]+(?: [\p{L}]+)*$");
+            bool isValid = Regex.IsMatch(model.StudentFullName , @"^[\p{L}]+(?: [\p{L}]+)*$");
             if (!isValid)
-                ModelState.AddModelError(nameof(model.FullName), "Invalid Full Name!");
+                ModelState.AddModelError(nameof(model.StudentFullName), "Invalid Full Name!");
 
-            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.FullName);
+            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.StudentFullName);
             if (existingStudent)
-                ModelState.AddModelError(nameof(model.FullName), "Student already exists!");
+                ModelState.AddModelError(nameof(model.StudentFullName), "Student already exists!");
 
             if (ModelState.IsValid)
             {
-                var student = new Student
-                {
-                    FullName = model.FullName,
-                    Email = model.Email,
-                    Phone = model.Phone,
-                    Gender = model.Gender,
-                    DateOfBirth = model.DateOfBirth,
-                    Address = model.Address,
-                    AdmissionDate = model.AdmissionDate,
-                    IsActive = model.IsActive
-                };
+                var student = _mapper.Map<Student>(model);
 
                 _dbContext.Student.Add(student);
                 _dbContext.SaveChanges();
@@ -102,18 +88,7 @@ namespace AcademicManagementSystem.Controllers
             if (student == null)
                 return RedirectToAction("Index");
 
-            var model = new StudentModel
-            {
-                Id = student.Id,
-                FullName = student.FullName,
-                Email = student.Email,
-                Phone = student.Phone,
-                Gender = student.Gender,
-                DateOfBirth = student.DateOfBirth,
-                Address = student.Address,
-                AdmissionDate = student.AdmissionDate,
-                IsActive = student.IsActive
-            };
+            var model = _mapper.Map<StudentModel>(student);
 
             PrepareAvailableGenders(model);
 
@@ -123,13 +98,13 @@ namespace AcademicManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Detail(StudentModel model)
         {
-            bool isValid = Regex.IsMatch(model.FullName, @"^[\p{L}]+(?: [\p{L}]+)*$");
+            bool isValid = Regex.IsMatch(model.StudentFullName, @"^[\p{L}]+(?: [\p{L}]+)*$");
             if (!isValid)
-                ModelState.AddModelError(nameof(model.FullName), "Invalid Full Name!");
+                ModelState.AddModelError(nameof(model.StudentFullName), "Invalid Full Name!");
 
-            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.FullName && d.Id != model.Id);
+            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.StudentFullName && d.Id != model.Id);
             if (existingStudent)
-                ModelState.AddModelError(nameof(model.FullName), "Student already exists!");
+                ModelState.AddModelError(nameof(model.StudentFullName), "Student already exists!");
 
             var student = await _dbContext.Student.FindAsync(model.Id);
             if (student == null)
@@ -137,14 +112,7 @@ namespace AcademicManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                student.FullName = model.FullName;
-                student.Email = model.Email;
-                student.Phone = model.Phone;
-                student.Gender = model.Gender;
-                student.DateOfBirth = model.DateOfBirth;
-                student.Address = model.Address;
-                student.AdmissionDate = model.AdmissionDate;
-                student.IsActive = model.IsActive;
+                _mapper.Map(model, student);
 
                 _dbContext.SaveChanges();
 
@@ -163,18 +131,7 @@ namespace AcademicManagementSystem.Controllers
             if (student == null)
                 return RedirectToAction("Index");
 
-            var model = new StudentModel
-            {
-                Id = student.Id,
-                FullName = student.FullName,
-                Email = student.Email,
-                Phone = student.Phone,
-                Gender = student.Gender,
-                DateOfBirth = student.DateOfBirth,
-                Address = student.Address,
-                AdmissionDate = student.AdmissionDate,
-                IsActive = student.IsActive
-            };
+            var model = _mapper.Map<StudentModel>(student);
 
             return View(model);
         }

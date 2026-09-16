@@ -1,0 +1,36 @@
+﻿@model AcademicManagementSystem.Models.EnrollmentModel
+
+<div class="mb-3">
+    <label asp-for="@Model.StudentId" class="form-label-custom"></label>
+    <select asp-for="@Model.StudentId" class="form-control-custom" placeholder="Select Student">
+        @foreach (var student in Model.AvailableStudents)
+        {
+            <option value="@student.Value" selected="@student.Selected">@student.Text</option>
+        }
+    </select>
+    <span asp-validation-for="@Model.StudentId" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.CourseId" class="form-label-custom"></label>
+    <select asp-for="@Model.CourseId" class="form-control-custom" placeholder="Select Course">
+        @foreach (var course in Model.AvailableCourses)
+        {
+            <option value="@course.Value" selected="@course.Selected">@course.Text</option>
+        }
+    </select>
+    <span asp-validation-for="@Model.CourseId" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="@Model.Status" class="form-label-custom"></label>
+    <input type="text" asp-for="@Model.Status" class="form-control-custom" placeholder="Enter Status" />
+    <span asp-validation-for="@Model.Status" class="alert-custom-content"></span>
+</div>
+
+<div class="form-check-custom">
+    <input type="checkbox" asp-for="@Model.IsActive" class="form-check-input-custom" />
+    <label asp-for="@Model.IsActive" class="form-check-label"></label>
+</div>
+
+<button class="btn-custom btn-custom-primary" type="submit">Save Course</button>
