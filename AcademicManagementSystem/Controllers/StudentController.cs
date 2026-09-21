@@ -24,8 +24,13 @@ namespace AcademicManagementSystem.Controllers
             _mapper = mapper;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var data = _dbContext.Student.FromSqlRaw("SELECT * FROM Student Where Id = 7").ToList();
+
+            await _dbContext.Database.ExecuteSqlRawAsync("Update student set isactive = 0");
+
+
             var model = new StudentListModel();
 
             var students = _dbContext.Student.ToList();

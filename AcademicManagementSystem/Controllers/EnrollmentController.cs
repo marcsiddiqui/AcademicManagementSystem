@@ -30,6 +30,8 @@ namespace AcademicManagementSystem.Controllers
 
             #region With Join
 
+#if false
+
             var data_list = from e in _dbContext.Enrollment
                        join s in _dbContext.Student on e.StudentId equals s.Id
                        join c in _dbContext.Courses on e.CourseId equals c.Id
@@ -53,6 +55,16 @@ namespace AcademicManagementSystem.Controllers
                     model.Enrollments.Add(enrollmentModel);
                 }
             }
+
+#endif
+
+            #endregion
+
+            #region With StoredProcedure
+
+            var data2 = _dbContext.Database.SqlQueryRaw<EnrollmentModel>("exec EnrollmentInfo;").ToList();
+            if (data2 != null && data2.Any())
+                model.Enrollments.AddRange(data2);
 
             #endregion
 
