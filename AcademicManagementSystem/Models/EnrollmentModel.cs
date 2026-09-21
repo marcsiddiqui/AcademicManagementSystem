@@ -18,13 +18,13 @@ namespace AcademicManagementSystem.Models
         public int StudentId { get; set; }
         
         [DisplayName("Student Name")]
-        public string StudentName { get; set; }
+        public string? StudentName { get; set; }
 
         [Required(ErrorMessage = "Course is required!")]
         public int CourseId { get; set; }
         
         [DisplayName("Course Name")]
-        public string CourseName { get; set; }
+        public string? CourseName { get; set; }
 
         [Required(ErrorMessage = "Enrollment date is required!")]
         [DisplayName("Enrollment Date")]
@@ -38,6 +38,8 @@ namespace AcademicManagementSystem.Models
 
         public List<SelectListItem> AvailableStudents { get; set; }
         public List<SelectListItem> AvailableCourses { get; set; }
+
+        public decimal Fee { get; set; }
     }
 
     public class EnrollmentListModel

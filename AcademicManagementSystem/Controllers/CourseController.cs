@@ -190,6 +190,10 @@ namespace AcademicManagementSystem.Controllers
             if (course == null)
                 return RedirectToAction("Index");
 
+            var existingEnrollments = _dbContext.Enrollment.Any(x => x.CourseId == course.Id);
+            if (existingEnrollments)
+                return RedirectToAction("Index");
+
             _dbContext.Courses.Remove(course);
             _dbContext.SaveChanges();
 

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
@@ -27,61 +28,31 @@ namespace AcademicManagementSystem.Controllers
         {
             var model = new EnrollmentListModel();
 
-            #region Without Join
-
-#if false
-            var courses = _dbContext.Enrollment.ToList();
-            var departments = _dbContext.Departments.ToList();
-
-            if (courses != null && courses.Any())
-            {
-                foreach (var course in courses)
-                {
-                    var department = departments != null && departments.Any() ? departments.FirstOrDefault(x => x.Id == course.DepartmentId) : null;
-
-                    var courseModel = new EnrollmentModel
-                    {
-                        Id = course.Id,
-                        Name = course.Name,
-                        Fee = course.Fee,
-                        DepartmentId = course.DepartmentId,
-                        DepartmentName = department != null ? department.Name : string.Empty
-                    };
-
-                    model.Enrollments.Add(courseModel);
-                }
-            }
-#endif
-
-            #endregion
-
             #region With Join
 
-#if false
+            var data_list = from e in _dbContext.Enrollment
+                       join s in _dbContext.Student on e.StudentId equals s.Id
+                       join c in _dbContext.Courses on e.CourseId equals c.Id
+                       select new { e.Id, e.EnrollmentDate, e.Status, e.IsActive, StudentName = s.FullName, CourseName = c.Name, c.Fee };
 
-            var data = from c in _dbContext.Enrollment
-                       join d in _dbContext.Departments on c.DepartmentId equals d.Id
-                       select new { c.Id, c.Name, c.Fee, c.DepartmentId, DepartmentName = d.Name };
-
-            if (data != null && data.Any())
+            if (data_list != null && data_list.Any())
             {
-                foreach (var course in data)
+                foreach (var data in data_list)
                 {
-                    var courseModel = new EnrollmentModel
+                    var enrollmentModel = new EnrollmentModel
                     {
-                        Id = course.Id,
-                        Name = course.Name,
-                        Fee = course.Fee,
-                        DepartmentId = course.DepartmentId,
-                        DepartmentName = course.DepartmentName
+                        Id = data.Id,
+                        StudentName = data.StudentName,
+                        CourseName = data.CourseName,
+                        EnrollmentDate = data.EnrollmentDate,
+                        Status = data.Status,
+                        IsActive = data.IsActive,
+                        Fee = data.Fee
                     };
 
-                    model.Enrollments.Add(courseModel);
+                    model.Enrollments.Add(enrollmentModel);
                 }
             }
-
-#endif
-
 
             #endregion
 
@@ -93,6 +64,8 @@ namespace AcademicManagementSystem.Controllers
         {
             var model = new EnrollmentModel();
 
+            model.EnrollmentDate = DateTime.Now;
+
             PrepareAvailableStudents(model);
             PrepareAvailableCourses(model);
 
@@ -102,15 +75,23 @@ namespace AcademicManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(EnrollmentModel model)
         {
+            var hasExistingEnrollments = _dbContext.Enrollment.Any(x => x.StudentId == model.StudentId && x.CourseId == model.CourseId);
+            if (hasExistingEnrollments)
+                ModelState.AddModelError(nameof(model.StudentId), "Enrollment against this Student and Course Already Exists!");
+
             if (ModelState.IsValid)
             {
                 var enrollment = _mapper.Map<Enrollment>(model);
+                enrollment.Course = null;
 
                 _dbContext.Enrollment.Add(enrollment);
                 _dbContext.SaveChanges();
 
                 return RedirectToAction("Index");
             }
+
+            PrepareAvailableStudents(model);
+            PrepareAvailableCourses(model);
 
             return View(model);
         }
@@ -135,18 +116,26 @@ namespace AcademicManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Detail(EnrollmentModel model)
         {
-            var course = await _dbContext.Enrollment.FindAsync(model.Id);
-            if (course == null)
+            var enrollment = await _dbContext.Enrollment.FindAsync(model.Id);
+            if (enrollment == null)
                 return RedirectToAction("Index");
+
+            var hasExistingEnrollments = _dbContext.Enrollment.Any(x => x.Id != enrollment.Id && x.StudentId == model.StudentId && x.CourseId == model.CourseId);
+            if (hasExistingEnrollments)
+                ModelState.AddModelError(nameof(model.StudentId), "Enrollment against this Student and Course Already Exists!");
 
             if (ModelState.IsValid)
             {
-                _mapper.Map(model, course);
+                _mapper.Map(model, enrollment);
+                enrollment.Course = null;
 
                 _dbContext.SaveChanges();
 
                 return RedirectToAction("Index");
             }
+
+            PrepareAvailableStudents(model);
+            PrepareAvailableCourses(model);
 
             return View(model);
         }

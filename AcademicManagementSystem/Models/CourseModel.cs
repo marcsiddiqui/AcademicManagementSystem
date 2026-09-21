@@ -24,7 +24,7 @@ namespace AcademicManagementSystem.Models
 
         public int DepartmentId { get; set; }
 
-        public string DepartmentName { get; set; }
+        public string? DepartmentName { get; set; }
 
         public List<SelectListItem> AvailableDepartments { get; set; }
     }

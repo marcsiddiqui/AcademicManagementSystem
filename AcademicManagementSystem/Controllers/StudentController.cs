@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
+using Microsoft.Identity.Client.NativeInterop;
 using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
@@ -129,6 +130,10 @@ namespace AcademicManagementSystem.Controllers
 
             var student = await _dbContext.Student.FindAsync(id);
             if (student == null)
+                return RedirectToAction("Index");
+
+            var existingEnrollments = _dbContext.Enrollment.Any(x => x.StudentId == student.Id);
+            if (existingEnrollments)
                 return RedirectToAction("Index");
 
             var model = _mapper.Map<StudentModel>(student);
