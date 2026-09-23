@@ -1,5 +1,6 @@
 ﻿using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
+using AcademicManagementSystem.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -14,26 +15,26 @@ namespace AcademicManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly StudentService _studentService;
 
         public StudentController(
             ApplicationDbContext dbContext,
-            IMapper mapper
+            IMapper mapper,
+            StudentService studentService
             )
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _studentService = studentService;
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(StudentListModel model)
         {
-            var data = _dbContext.Student.FromSqlRaw("SELECT * FROM Student Where Id = 7").ToList();
+            //var data = _dbContext.Student.FromSqlRaw("SELECT * FROM Student Where Id = 7").ToList();
 
-            await _dbContext.Database.ExecuteSqlRawAsync("Update student set isactive = 0");
+            //await _dbContext.Database.ExecuteSqlRawAsync("Update student set isactive = 0");
 
-
-            var model = new StudentListModel();
-
-            var students = _dbContext.Student.ToList();
+            var students = await _studentService.GetAllStudentsAsync(search: model.SearchText, status: model.StatusId, sortById: model.SortById);
 
             if (students != null && students.Any())
             {

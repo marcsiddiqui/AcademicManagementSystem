@@ -1,5 +1,5 @@
 ﻿@model AcademicManagementSystem.Models.StudentListModel
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
 <div class="page-header">
     <div>
         <h1 class="page-title">Students</h1>
@@ -9,35 +9,48 @@
 
 <!-- START: Basic Table Card Container -->
 <div class="table-card-custom">
-    <!-- Header Controls -->
-    <div class="table-header-control">
-        <!-- Search bar -->
-        <div class="table-search-box">
-            <i class="bi bi-search table-search-icon"></i>
-            <input type="text" class="table-search-input" placeholder="Search orders or products...">
-        </div>
-        <!-- Action buttons / Filter options -->
-        <div class="table-filter-group">
-            <div class="dropdown">
-                <button class="btn-table-action dropdown-toggle" type="button" id="dropdownFilterStatus"
-                        data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="bi bi-funnel"></i> Status Filter
-                </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownFilterStatus">
-                    <li><a class="dropdown-item" href="#">All Statuses</a></li>
-                    <li><a class="dropdown-item" href="#">Paid / Success</a></li>
-                    <li><a class="dropdown-item" href="#">Processing</a></li>
-                    <li><a class="dropdown-item" href="#">Cancelled / Failed</a></li>
-                </ul>
+    <form>
+        <!-- Header Controls -->
+        <div class="table-header-control">
+            <!-- Search bar -->
+            <div class="table-search-box">
+                <i class="bi bi-search table-search-icon"></i>
+                <input type="text" asp-for="@Model.SearchText" class="form-control-custom" placeholder="Search Students by Name, Email or Phone ..." />
+                <button class="btn-custom btn-custom-primary" type="submit">Search</button>
+                <button id="clearBtn" class="btn-custom btn-custom-primary" type="button">Clear</button>
+                <script>
+                    $(document).ready(function(){
+                        $("#clearBtn").click(function(){
+                            $("#SearchText").val("");
+                            $("#StatusId").val(0);
+                            $("#SortById").val(0);
+                        });
+                    });
+                </script>
             </div>
-            <button class="btn-table-action" type="button">
-                <i class="bi bi-file-earmark-arrow-down"></i> Export
-            </button>
-            <button class="btn-table-action" type="button">
-                <a asp-action="Create"><i class="bi bi-file-earmark-arrow-down"></i> + Add</a>
-            </button>
+            <!-- Action buttons / Filter options -->
+            <div class="table-filter-group">
+                <div class="dropdown">
+                    <select class="btn-table-action dropdown-toggle" asp-for="@Model.StatusId" data-bs-toggle="dropdown" aria-expanded="false">
+                        <option class="dropdown-item" value="0">All Statuses</option>
+                        <option class="dropdown-item" value="1">Active</option>
+                        <option class="dropdown-item" value="2">In Active</option>
+                    </select>
+                </div>
+                <div class="dropdown">
+                    <select class="btn-table-action dropdown-toggle" asp-for="@Model.SortById" data-bs-toggle="dropdown" aria-expanded="false">
+                        <option class="dropdown-item" value="0">default</option>
+                        <option class="dropdown-item" value="1">name_desc</option>
+                        <option class="dropdown-item" value="2">admission_date</option>
+                        <option class="dropdown-item" value="3">admission_date_desc</option>
+                    </select>
+                </div>
+                <button class="btn-table-action" type="button">
+                    <a asp-action="Create"><i class="bi bi-file-earmark-arrow-down"></i> + Add</a>
+                </button>
+            </div>
         </div>
-    </div>
+    </form>
 
     <!-- Responsive Table Wrapper -->
     <div class="table-responsive">

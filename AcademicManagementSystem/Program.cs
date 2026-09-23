@@ -19,6 +19,8 @@ namespace AcademicManagementSystem
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 
+            builder.Services.AddScoped<Services.StudentService>();
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
