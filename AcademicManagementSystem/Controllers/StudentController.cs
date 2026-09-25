@@ -17,6 +17,8 @@ namespace AcademicManagementSystem.Controllers
         private readonly IMapper _mapper;
         private readonly StudentService _studentService;
 
+        const int PageSize = 10;
+
         public StudentController(
             ApplicationDbContext dbContext,
             IMapper mapper,
@@ -34,18 +36,33 @@ namespace AcademicManagementSystem.Controllers
 
             //await _dbContext.Database.ExecuteSqlRawAsync("Update student set isactive = 0");
 
-            var students = await _studentService.GetAllStudentsAsync(search: model.SearchText, status: model.StatusId, sortById: model.SortById);
+            var pagedData = await _studentService.GetAllStudentsAsync(
+                search: model.SearchText,
+                status: model.StatusId,
+                sortById: model.SortById,
+                pageNumber: model.PageNumber,
+                pageSize: PageSize);
 
-            if (students != null && students.Any())
+            if (pagedData != null)
             {
-                foreach (var student in students)
+                if (pagedData.Records != null && pagedData.Records.Any())
                 {
-                    var studentModel = _mapper.Map<StudentModel>(student);
+                    foreach (var student in pagedData.Records)
+                    {
+                        var studentModel = _mapper.Map<StudentModel>(student);
 
-                    model.Students.Add(studentModel);
+                        model.Students.Add(studentModel);
+                    }
                 }
-            }
 
+                model.PageSize = PageSize;
+                model.TotalPages = pagedData.TotalPages;
+                model.TotalRecords = pagedData.TotalRecords;
+                model.HasNextPage = (model.PageNumber) < model.TotalPages;
+                model.HasPreviousPage = model.PageNumber > 1;
+                model.ShowingFrom = ((model.PageNumber - 1) * model.PageSize) + 1;
+                model.ShowingTo = model.PageNumber == model.TotalPages ? model.TotalRecords : model.PageNumber * model.PageSize;
+            }
 
             return View(model);
         }

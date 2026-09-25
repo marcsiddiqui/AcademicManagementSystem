@@ -5,8 +5,6 @@ namespace AcademicManagementSystem.Services
 {
     public class StudentService
     {
-        const int PageSize = 10;
-
         private readonly ApplicationDbContext _dbContext;
         public StudentService(
             ApplicationDbContext dbContext
@@ -15,7 +13,7 @@ namespace AcademicManagementSystem.Services
             _dbContext = dbContext;
         }
 
-        public async Task<List<Student>> GetAllStudentsAsync(string search = null, int status = 0, int sortById = 0, int pageNumber = 0)
+        public async Task<PagedList<Student>> GetAllStudentsAsync(string search = null, int status = 0, int sortById = 0, int pageNumber = 0, int pageSize = 10)
         {
             // iqueryable
             var query = _dbContext.Student.AsQueryable();
@@ -45,14 +43,26 @@ namespace AcademicManagementSystem.Services
                     query = query.OrderByDescending(x => x.AdmissionDate);
                     break;
                 default:
-                    query = query.OrderBy(x => x.FullName);
+                    query = query.OrderBy(x => x.Id);
                     break;
             }
 
-            // pagination
-            var students = await query.Skip(pageNumber - 1 * PageSize).Take(PageSize).ToListAsync();
+            // total count
+            var totalCount = await query.CountAsync();
 
-            return students;
+            var totalPages = (int)Math.Ceiling(totalCount / (double)pageSize);
+
+            // pagination
+            var students = await query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            var pagedList = new PagedList<Student>
+            {
+                Records = students,
+                TotalRecords = totalCount,
+                TotalPages = totalPages
+            };
+
+            return pagedList;
         }
     }
 }
