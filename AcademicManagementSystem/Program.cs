@@ -1,4 +1,5 @@
 using AcademicManagementSystem.DatabaseConfiguration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace AcademicManagementSystem
@@ -21,6 +22,9 @@ namespace AcademicManagementSystem
 
             builder.Services.AddScoped<Services.StudentService>();
             builder.Services.AddScoped<Services.RoleService>();
+            builder.Services.AddScoped<Services.UserService>();
+
+            builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
             var app = builder.Build();
 

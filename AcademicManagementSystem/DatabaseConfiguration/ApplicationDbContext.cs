@@ -11,6 +11,7 @@ namespace AcademicManagementSystem.DatabaseConfiguration
         public DbSet<Student> Student { get; set; }
         public DbSet<Enrollment> Enrollment { get; set; }
         public DbSet<Role> Role { get; set; }
+        public DbSet<User> User { get; set; }
 
         // Define your DbSets for your entities here
         // Example:

@@ -1,0 +1,40 @@
+@model AcademicManagementSystem.Models.UserModel
+
+<input type="hidden" asp-for="Id" />
+
+<div class="mb-3">
+    <label asp-for="FullName" class="form-label-custom"></label>
+    <input type="text" asp-for="FullName" class="form-control-custom" placeholder="Enter Full Name" />
+    <span asp-validation-for="FullName" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Email" class="form-label-custom"></label>
+    <input type="email" asp-for="Email" class="form-control-custom" placeholder="Enter Email" />
+    <span asp-validation-for="Email" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="Password" class="form-label-custom"></label>
+    <input asp-for="Password" class="form-control-custom" placeholder="Enter Password" />
+    <span asp-validation-for="Password" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="ConfirmPassword" class="form-label-custom"></label>
+    <input asp-for="ConfirmPassword" class="form-control-custom" placeholder="Confirm Password" />
+    <span asp-validation-for="ConfirmPassword" class="alert-custom-content"></span>
+</div>
+
+<div class="mb-3">
+    <label asp-for="RoleId" class="form-label-custom"></label>
+    <select asp-for="RoleId" asp-items="Model.AvailableRoles" class="form-control-custom"></select>
+    <span asp-validation-for="RoleId" class="alert-custom-content"></span>
+</div>
+
+<div class="form-check-custom">
+    <input type="checkbox" asp-for="IsActive" class="form-check-input-custom" />
+    <label asp-for="IsActive" class="form-check-label"></label>
+</div>
+
+<button class="btn-custom btn-custom-primary" type="submit">Save User</button>

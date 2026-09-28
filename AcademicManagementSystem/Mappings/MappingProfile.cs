@@ -19,6 +19,12 @@ namespace AcademicManagementSystem.Mappings
             CreateMap<Department, DepartmentModel>().ReverseMap();
 
             CreateMap<Role, RoleModel>().ReverseMap();
+
+            CreateMap<User, UserModel>()
+                .ForMember(dest => dest.RoleName, opt => opt.MapFrom(src => src.Role != null ? src.Role.Name : string.Empty));
+
+            CreateMap<UserModel, User>()
+                .ForMember(dest => dest.Role, opt => opt.Ignore());
         }
     }
 }

@@ -119,6 +119,9 @@ namespace AcademicManagementSystem.Controllers
             if (role == null)
                 return RedirectToAction(nameof(Index));
 
+            if (await _dbContext.User.AnyAsync(x => x.RoleId == role.Id))
+                return RedirectToAction(nameof(Index));
+
             _dbContext.Role.Remove(role);
             await _dbContext.SaveChangesAsync();
 

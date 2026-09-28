@@ -1,0 +1,19 @@
+@model AcademicManagementSystem.Models.UserModel
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Detail User</h1>
+        <p class="page-subtitle">An easy way to manage users.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12 col-lg-6">
+        <div class="card border-light shadow-sm p-4 h-100">
+            <h5 class="card-title mb-4">User Info</h5>
+            <form asp-action="Detail" method="post">
+                <partial name="_CreateOrUpdate" />
+            </form>
+        </div>
+    </div>
+</div>
