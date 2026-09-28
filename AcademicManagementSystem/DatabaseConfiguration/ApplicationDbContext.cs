@@ -10,6 +10,7 @@ namespace AcademicManagementSystem.DatabaseConfiguration
         public DbSet<Course> Courses { get; set; }
         public DbSet<Student> Student { get; set; }
         public DbSet<Enrollment> Enrollment { get; set; }
+        public DbSet<Role> Role { get; set; }
 
         // Define your DbSets for your entities here
         // Example:

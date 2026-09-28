@@ -17,6 +17,8 @@ namespace AcademicManagementSystem.Mappings
             CreateMap<Enrollment, EnrollmentModel>().ReverseMap();
 
             CreateMap<Department, DepartmentModel>().ReverseMap();
+
+            CreateMap<Role, RoleModel>().ReverseMap();
         }
     }
 }

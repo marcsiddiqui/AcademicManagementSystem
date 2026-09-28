@@ -1,0 +1,19 @@
+@model AcademicManagementSystem.Models.RoleModel
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Detail Role</h1>
+        <p class="page-subtitle">An easy way to manage roles.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12 col-lg-6">
+        <div class="card border-light shadow-sm p-4 h-100">
+            <h5 class="card-title mb-4">Role Info</h5>
+            <form asp-action="Detail" method="post">
+                <partial name="_CreateOrUpdate" />
+            </form>
+        </div>
+    </div>
+</div>

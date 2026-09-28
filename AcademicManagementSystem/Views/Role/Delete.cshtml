@@ -1,0 +1,24 @@
+@model AcademicManagementSystem.Models.RoleModel
+
+<div class="page-header">
+    <div>
+        <h1 class="page-title">Delete Role</h1>
+        <p class="page-subtitle">An easy way to manage roles.</p>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-12 col-lg-6">
+        <div class="card border-light shadow-sm p-4 h-100">
+            <h5 class="card-title mb-4">Role Info</h5>
+            <form asp-action="Delete" method="post">
+                <input type="hidden" asp-for="Id" />
+                <h4>Are you sure you want to delete Role @Model.Name?</h4>
+                <div class="mt-4">
+                    <button type="submit" class="btn-custom btn-custom-danger">Delete</button>
+                    <a asp-action="Index" class="btn-custom btn-custom-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

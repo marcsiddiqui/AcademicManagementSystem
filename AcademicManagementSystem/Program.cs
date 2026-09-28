@@ -20,6 +20,7 @@ namespace AcademicManagementSystem
             builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 
             builder.Services.AddScoped<Services.StudentService>();
+            builder.Services.AddScoped<Services.RoleService>();
 
             var app = builder.Build();
 
