@@ -1,6 +1,7 @@
 ﻿using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
 using AspNetCoreGeneratedDocument;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
@@ -8,6 +9,7 @@ using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
 {
+    [Authorize]
     public class DepartmentController : Controller
     {
         private readonly ApplicationDbContext _dbContext;
@@ -42,12 +44,14 @@ namespace AcademicManagementSystem.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> Create()
         {
             var model = new DepartmentModel();
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Create(DepartmentModel model)
         {
@@ -95,6 +99,7 @@ namespace AcademicManagementSystem.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Detail(DepartmentModel model)
         {
@@ -146,6 +151,7 @@ namespace AcademicManagementSystem.Controllers
             return View(model);
         }
 
+        [Authorize(Roles = "Administrator")]
         [HttpPost]
         public async Task<IActionResult> Delete(DepartmentModel model)
         {

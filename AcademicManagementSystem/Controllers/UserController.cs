@@ -2,6 +2,7 @@ using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
 using AcademicManagementSystem.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -10,6 +11,7 @@ using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
 {
+    [Authorize]
     public class UserController : Controller
     {
         private const int PageSize = 10;

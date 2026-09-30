@@ -49,6 +49,8 @@
             <!-- Login Form -->
             <form action="Login" method="POST" class="needs-validation" novalidate>
 
+                <input type="hidden" asp-for="@Model.ReturnUrl" />
+
                 <!-- Email Input Group -->
                 <div class="login-form-group">
                     <label for="email" class="login-form-label">Email Address</label>
@@ -73,7 +75,7 @@
                 <!-- Options (Remember me & Forgot Password) -->
                 <div class="login-options">
                     <label class="custom-control-label">
-                        <input type="checkbox" class="custom-checkbox-input" id="rememberMe">
+                        <input type="checkbox" asp-for="@Model.RememberMe" class="custom-checkbox-input" />
                         <span>Remember Me</span>
                     </label>
                     <a href="~/#" class="forgot-password-link">Forgot Password?</a>

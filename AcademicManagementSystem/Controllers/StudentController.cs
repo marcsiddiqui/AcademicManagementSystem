@@ -2,6 +2,7 @@
 using AcademicManagementSystem.Models;
 using AcademicManagementSystem.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -11,6 +12,7 @@ using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
 {
+    [Authorize]
     public class StudentController : Controller
     {
         private readonly ApplicationDbContext _dbContext;

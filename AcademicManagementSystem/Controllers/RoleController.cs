@@ -2,12 +2,14 @@ using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
 using AcademicManagementSystem.Services;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
 {
+    [Authorize(Roles = "Administrator")]
     public class RoleController : Controller
     {
         private const int PageSize = 10;

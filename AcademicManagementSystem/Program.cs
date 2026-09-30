@@ -1,4 +1,5 @@
 using AcademicManagementSystem.DatabaseConfiguration;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,13 @@ namespace AcademicManagementSystem
 
             builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.LoginPath = "/Account/Login";
+                    options.AccessDeniedPath = "/Account/AccessDenied";
+                });
+
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -44,7 +52,7 @@ namespace AcademicManagementSystem
             app.MapStaticAssets();
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller=Department}/{action=Index}/{id?}")
+                pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
 
             app.Run();
