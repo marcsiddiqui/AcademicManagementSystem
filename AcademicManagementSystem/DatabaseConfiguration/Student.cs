@@ -11,5 +11,9 @@
         public string Address { get; set; }
         public DateTime AdmissionDate { get; set; }
         public bool IsActive { get; set; } = true;
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
+        public int UpdatedBy { get; set; }
+        public DateTime? UpdatedOnUtc { get; set; }
     }
 }

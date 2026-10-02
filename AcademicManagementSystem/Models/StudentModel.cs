@@ -45,6 +45,11 @@ namespace AcademicManagementSystem.Models
 
         public List<SelectListItem> AvailableGenders { get; set; }
 
+        public int CreatedBy { get; set; }
+        public DateTime CreatedOnUtc { get; set; }
+        public int UpdatedBy { get; set; }
+        public DateTime? UpdatedOnUtc { get; set; }
+
     }
 
     public class StudentListModel

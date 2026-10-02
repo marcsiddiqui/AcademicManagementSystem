@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Identity.Client;
 using Microsoft.Identity.Client.NativeInterop;
+using System.Security.Claims;
 using System.Text.RegularExpressions;
 
 namespace AcademicManagementSystem.Controllers
@@ -96,6 +97,11 @@ namespace AcademicManagementSystem.Controllers
             {
                 var student = _mapper.Map<Student>(model);
 
+                var userId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int parsedUserId) ? parsedUserId : 0;
+
+                student.CreatedBy = userId;
+                student.CreatedOnUtc = DateTime.UtcNow;
+
                 _dbContext.Student.Add(student);
                 _dbContext.SaveChanges();
 
@@ -138,7 +144,15 @@ namespace AcademicManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
+                model.CreatedBy = student.CreatedBy;
+                model.CreatedOnUtc = student.CreatedOnUtc;
+
                 _mapper.Map(model, student);
+
+                var userId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int parsedUserId) ? parsedUserId : 0;
+
+                student.UpdatedBy = userId;
+                student.UpdatedOnUtc = DateTime.UtcNow;
 
                 _dbContext.SaveChanges();
 

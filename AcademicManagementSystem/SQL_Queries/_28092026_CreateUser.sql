@@ -16,3 +16,16 @@ BEGIN
 
     CREATE INDEX [IX_User_RoleId] ON [dbo].[User] ([RoleId]);
 END;
+
+
+alter table Student
+add CreatedBy int not null default 0
+
+alter table Student
+add CreatedOnUtc datetime not null default getutcdate()
+
+alter table Student
+add UpdatedBy int not null default 0
+
+alter table Student
+add UpdatedOnUtc datetime null
