@@ -11,7 +11,7 @@
     <div class="col-12 col-lg-6">
         <div class="card border-light shadow-sm p-4 h-100">
             <h5 class="card-title mb-4">User Info</h5>
-            <form asp-action="Create" method="post">
+            <form asp-action="Create" method="post" enctype="multipart/form-data">
                 <partial name="_CreateOrUpdate" />
             </form>
         </div>

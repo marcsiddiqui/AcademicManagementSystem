@@ -1,6 +1,10 @@
 ﻿@using System.Security.Claims
 @{
     var role = User.FindFirstValue(ClaimTypes.Role);
+    var profileImage = User.FindFirstValue(ClaimTypes.OtherPhone);
+
+    if (string.IsNullOrWhiteSpace(profileImage))
+        profileImage = Url.Content("~/assets/images/avatar.png");
 }
 <header class="navbar-custom">
     <div class="navbar-left">
@@ -102,7 +106,7 @@
         <div class="dropdown ms-2">
             <button class="navbar-profile-btn dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false" id="profile-dropdown">
-                <img src="~/assets/images/avatar.png" alt="Profile Image" class="navbar-profile-img">
+                <img src="@profileImage" alt="Profile Image" class="navbar-profile-img">
                 <span class="navbar-profile-name d-none d-md-inline">@User.Identity?.Name</span>
                 <span class="navbar-profile-name d-none d-md-inline">@role</span>
                 <i class="bi bi-chevron-down navbar-profile-caret"></i>

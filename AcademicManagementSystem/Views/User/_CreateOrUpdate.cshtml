@@ -1,6 +1,13 @@
 @model AcademicManagementSystem.Models.UserModel
 
 <input type="hidden" asp-for="Id" />
+<input type="hidden" asp-for="ImagePath" />
+
+<div class="mb-3">
+    <label for="imageFile" class="form-label-custom">Profile Image</label>
+    <input id="imageFile" name="imageFile" type="file" accept=".jpg,.jpeg,.png,image/jpeg,image/png" class="form-control-custom" />
+    <span data-valmsg-for="imageFile" class="alert-custom-content"></span>
+</div>
 
 <div class="mb-3">
     <label asp-for="FullName" class="form-label-custom"></label>

@@ -20,17 +20,20 @@ namespace AcademicManagementSystem.Controllers
         private readonly IMapper _mapper;
         private readonly UserService _userService;
         private readonly IPasswordHasher<User> _passwordHasher;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
         public UserController(
             ApplicationDbContext dbContext,
             IMapper mapper,
             UserService userService,
-            IPasswordHasher<User> passwordHasher)
+            IPasswordHasher<User> passwordHasher,
+            IWebHostEnvironment webHostEnvironment)
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _userService = userService;
             _passwordHasher = passwordHasher;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public async Task<IActionResult> Index(UserListModel model)
@@ -70,14 +73,44 @@ namespace AcademicManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(UserModel model)
+        public async Task<IActionResult> Create(UserModel model, IFormFile? imageFile)
         {
+            var imageExtension = string.Empty;
+            if (imageFile is { Length: > 0 })
+            {
+                imageExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+
+                if (!allowedExtensions.Contains(imageExtension))
+                    ModelState.AddModelError(nameof(imageFile), "Only JPG, JPEG, and PNG images are allowed.");
+
+                const long maximumFileSize = 2 * 1024 * 1024;
+                if (imageFile.Length > maximumFileSize)
+                    ModelState.AddModelError(nameof(imageFile), "The image must be 2 MB or smaller.");
+            }
+
             await ValidateUserAsync(model);
 
             if (!ModelState.IsValid)
             {
                 await PrepareAvailableRolesAsync(model);
                 return View(model);
+            }
+
+            if (imageFile is { Length: > 0 })
+            {
+                var fileName = $"{Guid.NewGuid():N}{imageExtension}";
+
+                var webRootPath = _webHostEnvironment.WebRootPath ?? Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot");
+
+                var uploadDirectory = Path.Combine(webRootPath, "uploads", "users");
+                Directory.CreateDirectory(uploadDirectory);
+
+                var filePath = Path.Combine(uploadDirectory, fileName);
+                await using var stream = System.IO.File.Create(filePath);
+                await imageFile.CopyToAsync(stream);
+
+                model.ImagePath = $"/uploads/users/{fileName}";
             }
 
             model.CreatedOnUtc = DateTime.UtcNow;
@@ -109,8 +142,22 @@ namespace AcademicManagementSystem.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Detail(UserModel model)
+        public async Task<IActionResult> Detail(UserModel model, IFormFile? imageFile)
         {
+            var imageExtension = string.Empty;
+            if (imageFile is { Length: > 0 })
+            {
+                imageExtension = Path.GetExtension(imageFile.FileName).ToLowerInvariant();
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png" };
+
+                if (!allowedExtensions.Contains(imageExtension))
+                    ModelState.AddModelError(nameof(imageFile), "Only JPG, JPEG, and PNG images are allowed.");
+
+                const long maximumFileSize = 2 * 1024 * 1024;
+                if (imageFile.Length > maximumFileSize)
+                    ModelState.AddModelError(nameof(imageFile), "The image must be 2 MB or smaller.");
+            }
+
             await ValidateUserAsync(model, model.Id);
 
             var user = await _dbContext.User.FindAsync(model.Id);
@@ -121,6 +168,22 @@ namespace AcademicManagementSystem.Controllers
             {
                 await PrepareAvailableRolesAsync(model);
                 return View(model);
+            }
+
+            if (imageFile is { Length: > 0 })
+            {
+                var fileName = $"{Guid.NewGuid():N}{imageExtension}";
+
+                var webRootPath = _webHostEnvironment.WebRootPath ?? Path.Combine(_webHostEnvironment.ContentRootPath, "wwwroot");
+
+                var uploadDirectory = Path.Combine(webRootPath, "uploads", "users");
+                Directory.CreateDirectory(uploadDirectory);
+
+                var filePath = Path.Combine(uploadDirectory, fileName);
+                await using var stream = System.IO.File.Create(filePath);
+                await imageFile.CopyToAsync(stream);
+
+                model.ImagePath = $"/uploads/users/{fileName}";
             }
 
             var createdOnUtc = user.CreatedOnUtc;

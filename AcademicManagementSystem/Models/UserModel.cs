@@ -45,6 +45,8 @@ namespace AcademicManagementSystem.Models
         public DateTime CreatedOnUtc { get; set; }
 
         public List<SelectListItem> AvailableRoles { get; set; }
+
+        public string? ImagePath { get; set; }
     }
 
     public class UserListModel

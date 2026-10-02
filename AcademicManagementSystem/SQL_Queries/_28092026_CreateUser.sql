@@ -29,3 +29,6 @@ add UpdatedBy int not null default 0
 
 alter table Student
 add UpdatedOnUtc datetime null
+
+alter table [user]
+add ImagePath  nvarchar(max) null

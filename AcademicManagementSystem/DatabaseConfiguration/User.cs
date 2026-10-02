@@ -10,5 +10,6 @@
         public bool IsActive { get; set; } = true;
         public DateTime CreatedOnUtc { get; set; }
         public Role Role { get; set; } = null!;
+        public string? ImagePath { get; set; }
     }
 }
