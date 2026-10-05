@@ -1,6 +1,273 @@
-﻿<div class="page-header">
+﻿<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<div class="page-header">
     <div>
         <h1 class="page-title">Welcome</h1>
         <p class="page-subtitle">An easy way to manage sales with care and precision.</p>
     </div>
 </div>
+
+<!-- TOP AREA: Quick Info Stat Cards Row (Full Width) -->
+<div class="col-12">
+    <div class="row g-4">
+        <!-- Stat Card 1: Green Alert Banner -->
+        <div class="col-md-4">
+            <div class="card alert-green-card">
+                <div class="card-header">
+                    <span class="stat-label">Active Students</span>
+                    <div class="dropdown">
+                        <button class="card-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                aria-label="More Options" id="btn-more-income">
+                            <i class="bi bi-three-dots"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
+                            <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Refresh</a></li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="bi bi-file-earmark-arrow-down"></i> Export
+                                    Report
+                                </a>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <a class="dropdown-item text-danger" href="#"><i class="bi bi-eye-slash"></i> Hide Details</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="stat-value" id="activeStudentsCount"></div>
+                <div class="trend-badge trend-up">
+                    <i class="bi bi-arrow-up-right"></i>
+                    <span>+35% from last month</span>
+                </div>
+
+                <!-- Inline SVG geometric decoration (Lime green 6-pointed star/asterisk with rounded caps) -->
+                <svg class="alert-green-bg-shape" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(50,50)">
+                        <rect x="-6" y="-45" width="12" height="90" rx="6" ry="6" fill="#B4F105" />
+                        <rect x="-6" y="-45" width="12" height="90" rx="6" ry="6" fill="#B4F105" transform="rotate(60)" />
+                        <rect x="-6" y="-45" width="12" height="90" rx="6" ry="6" fill="#B4F105" transform="rotate(120)" />
+                    </g>
+                </svg>
+            </div>
+        </div>
+
+        <!-- Stat Card 2: Net Income -->
+        <div class="col-md-4">
+            <div class="card card-stat d-flex flex-column justify-content-between">
+                <div>
+                    <div class="card-header">
+                        <span class="stat-label">Courses</span>
+                        <div class="dropdown">
+                            <button class="card-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                    aria-label="More Options" id="btn-more-income">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Refresh</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-file-earmark-arrow-down"></i> Export
+                                        Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#"><i class="bi bi-eye-slash"></i> Hide Details</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="coursesCount"></div>
+                    <div class="trend-badge trend-up">
+                        <i class="bi bi-arrow-up-right"></i>
+                        <span>+35% from last month</span>
+                    </div>
+                </div>
+                <div class="sparkline-container sparkline-card-footer">
+                    <div id="income-sparkline"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stat Card 3: Total Return -->
+        <div class="col-md-4">
+            <div class="card card-stat d-flex flex-column justify-content-between">
+                <div>
+                    <div class="card-header">
+                        <span class="stat-label">Departments</span>
+                        <div class="dropdown">
+                            <button class="card-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                    aria-label="More Options" id="btn-more-return">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Refresh</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-file-earmark-arrow-down"></i> Export
+                                        Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#"><i class="bi bi-eye-slash"></i> Hide Details</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="departmentsCount"></div>
+                    <div class="trend-badge trend-down">
+                        <i class="bi bi-arrow-down-left"></i>
+                        <span>-24% from last month</span>
+                    </div>
+                </div>
+                <div class="sparkline-container sparkline-card-footer">
+                    <div id="return-sparkline"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-4">
+            <div class="card card-stat d-flex flex-column justify-content-between">
+                <div>
+                    <div class="card-header">
+                        <span class="stat-label">Enrollments</span>
+                        <div class="dropdown">
+                            <button class="card-more-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false"
+                                    aria-label="More Options" id="btn-more-return">
+                                <i class="bi bi-three-dots"></i>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-custom">
+                                <li><a class="dropdown-item" href="#"><i class="bi bi-arrow-repeat"></i> Refresh</a></li>
+                                <li>
+                                    <a class="dropdown-item" href="#">
+                                        <i class="bi bi-file-earmark-arrow-down"></i> Export
+                                        Report
+                                    </a>
+                                </li>
+                                <li>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li>
+                                    <a class="dropdown-item text-danger" href="#"><i class="bi bi-eye-slash"></i> Hide Details</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="stat-value" id="enrollmentsCount"></div>
+                    <div class="trend-badge trend-down">
+                        <i class="bi bi-arrow-down-left"></i>
+                        <span>-24% from last month</span>
+                    </div>
+                </div>
+                <div class="sparkline-container sparkline-card-footer">
+                    <div id="return-sparkline"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    $(document).ready(function () {
+        const refreshInterval = 2000;
+        let refreshTimer;
+
+        function scheduleDashboardRefresh() {
+            clearTimeout(refreshTimer);
+            refreshTimer = setTimeout(reloadDashboardData, refreshInterval);
+        }
+
+        function reloadDashboardData () {
+            var payLoad = {
+                Username: "ABC User",
+                Email: "abc@gmail.com"
+            };
+
+            $.ajax({
+                cache: false,
+                url: "@Url.Action("GetDashboardData", "Home")",
+                type: "POST",
+                data: payLoad,
+                success: function (data) {
+                    console.log(data);
+                    if (data.success) {
+                        $("#activeStudentsCount").text(data.data.studentsCount);
+                        $("#coursesCount").text(data.data.coursesCount);
+                        $("#departmentsCount").text(data.data.departmentsCount);
+                        $("#enrollmentsCount").text(data.data.enrollmentsCount);
+                    }
+
+                    const returnSparkOptions = {
+                        series: [{
+                            name: 'Total Return',
+                            data: [10, 9, 25, 3]
+                        }],
+                        chart: {
+                            type: 'area',
+                            height: 45,
+                            sparkline: {
+                                enabled: true
+                            },
+                            fontFamily: 'Plus Jakarta Sans, sans-serif'
+                        },
+                        stroke: {
+                            curve: 'smooth',
+                            width: 2
+                        },
+                        fill: {
+                            opacity: 0.1,
+                            type: 'solid'
+                        },
+                        colors: ['#EF4444'], // Red color matching trend-down
+                        tooltip: {
+                            fixed: {
+                                enabled: false
+                            },
+                            x: {
+                                show: false
+                            },
+                            y: {
+                                title: {
+                                    formatter: function (seriesName) {
+                                        return '';
+                                    }
+                                }
+                            },
+                            marker: {
+                                show: false
+                            }
+                        }
+                    };
+
+                    const returnSparkEl = document.querySelector('#return-sparkline');
+                    if (returnSparkEl) {
+                        const returnSpark = new ApexCharts(returnSparkEl, returnSparkOptions);
+                        returnSpark.render();
+                    }
+
+                },
+                error: function (xhr, status, error) {
+                    console.error("Unable to refresh dashboard data:", status, error);
+                },
+                complete: scheduleDashboardRefresh
+            });
+        }
+
+        reloadDashboardData();
+
+        $(window).on("pagehide", function () {
+            clearTimeout(refreshTimer);
+        });
+    });
+
+
+</script>
+<!-- END: TOP AREA -->

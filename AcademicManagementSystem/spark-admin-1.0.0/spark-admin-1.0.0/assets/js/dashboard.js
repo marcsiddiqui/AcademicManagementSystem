@@ -270,47 +270,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    const returnSparkOptions = {
-        series: [{
-            name: 'Total Return',
-            data: [50, 48, 55, 45, 40, 38, 42, 35, 30, 28, 32, 24]
-        }],
-        chart: {
-            type: 'area',
-            height: 45,
-            sparkline: {
-                enabled: true
-            },
-            fontFamily: 'Plus Jakarta Sans, sans-serif'
-        },
-        stroke: {
-            curve: 'smooth',
-            width: 2
-        },
-        fill: {
-            opacity: 0.1,
-            type: 'solid'
-        },
-        colors: ['#EF4444'], // Red color matching trend-down
-        tooltip: {
-            fixed: {
-                enabled: false
-            },
-            x: {
-                show: false
-            },
-            y: {
-                title: {
-                    formatter: function (seriesName) {
-                        return '';
-                    }
-                }
-            },
-            marker: {
-                show: false
-            }
-        }
-    };
+   
 
     const incomeSparkEl = document.querySelector('#income-sparkline');
     if (incomeSparkEl) {
@@ -318,11 +278,7 @@ document.addEventListener('DOMContentLoaded', function () {
         incomeSpark.render();
     }
 
-    const returnSparkEl = document.querySelector('#return-sparkline');
-    if (returnSparkEl) {
-        const returnSpark = new ApexCharts(returnSparkEl, returnSparkOptions);
-        returnSpark.render();
-    }
+    
 
     // -----------------------------------------------------------------
     // 5. Flatpickr Date Range Picker Initialization
