@@ -1,4 +1,5 @@
 using AcademicManagementSystem.DatabaseConfiguration;
+using AcademicManagementSystem.Services;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +22,7 @@ namespace AcademicManagementSystem
             //builder.Services.AddAutoMapper(typeof(Program));
             builder.Services.AddAutoMapper(cfg => { }, typeof(Program));
 
-            builder.Services.AddScoped<Services.StudentService>();
+            builder.Services.AddScoped<IStudentService, StudentService>();
             builder.Services.AddScoped<Services.RoleService>();
             builder.Services.AddScoped<Services.UserService>();
 

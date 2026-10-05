@@ -18,19 +18,22 @@ namespace AcademicManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
-        private readonly StudentService _studentService;
+        private readonly IStudentService _studentService;
+        private readonly ILogger<StudentController> _logger;
 
         const int PageSize = 10;
 
         public StudentController(
             ApplicationDbContext dbContext,
             IMapper mapper,
-            StudentService studentService
+            IStudentService studentService,
+            ILogger<StudentController> logger
             )
         {
             _dbContext = dbContext;
             _mapper = mapper;
             _studentService = studentService;
+            _logger = logger;
         }
 
         public async Task<IActionResult> Index(StudentListModel model)
@@ -95,17 +98,26 @@ namespace AcademicManagementSystem.Controllers
 
             if (ModelState.IsValid)
             {
-                var student = _mapper.Map<Student>(model);
+                try
+                {
+                    var student = _mapper.Map<Student>(model);
 
-                var userId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int parsedUserId) ? parsedUserId : 0;
+                    var userId = int.TryParse(User.FindFirstValue(ClaimTypes.NameIdentifier), out int parsedUserId) ? parsedUserId : 0;
 
-                student.CreatedBy = userId;
-                student.CreatedOnUtc = DateTime.UtcNow;
+                    student.CreatedBy = userId;
+                    student.CreatedOnUtc = DateTime.UtcNow;
 
-                _dbContext.Student.Add(student);
-                _dbContext.SaveChanges();
+                    _dbContext.Student.Add(student);
+                    _dbContext.SaveChanges();
 
-                return RedirectToAction("Index");
+                    _logger.LogInformation("Student created successfully. Student ID: {StudentId}, Created By User ID: {UserId}", student.Id, userId);
+
+                    return RedirectToAction("Index");
+                }
+                catch (Exception)
+                {
+                    _logger.LogError("An error occurred while creating the student. Student Full Name: {StudentFullName}", model.StudentFullName);
+                }
             }
 
             return View(model);

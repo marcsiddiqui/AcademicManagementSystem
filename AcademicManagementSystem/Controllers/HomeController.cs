@@ -11,10 +11,10 @@ namespace AcademicManagementSystem.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-        private readonly StudentService _studentService;
+        private readonly IStudentService _studentService;
         private readonly ApplicationDbContext _dbContext;
 
-        public HomeController(StudentService studentService, ApplicationDbContext dbContext)
+        public HomeController(IStudentService studentService, ApplicationDbContext dbContext)
         {
             _studentService = studentService;
             _dbContext = dbContext;
