@@ -35,7 +35,19 @@ namespace AcademicManagementSystem
                     options.AccessDeniedPath = "/Account/AccessDenied";
                 });
 
+            builder.Services.AddOpenApi();
+
             var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.MapOpenApi();
+
+                app.UseSwaggerUi(options =>
+                {
+                    options.DocumentPath = "/openapi/v1.json";
+                });
+            }
 
             // Configure the HTTP request pipeline.
             if (!app.Environment.IsDevelopment())
@@ -55,6 +67,9 @@ namespace AcademicManagementSystem
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}")
                 .WithStaticAssets();
+
+            // api related routes
+            app.MapControllers();
 
             app.UseStaticFiles();
 

@@ -64,5 +64,53 @@ namespace AcademicManagementSystem.Services
 
             return pagedList;
         }
+
+        public Task<Student?> GetStudentByIdAsync(int id)
+        {
+            return _dbContext.Student.FirstOrDefaultAsync(student => student.Id == id);
+        }
+
+        public Task<List<Student>> GetActiveStudentsAsync()
+        {
+            return _dbContext.Student
+                .Where(student => student.IsActive)
+                .OrderBy(student => student.FullName)
+                .ToListAsync();
+        }
+
+        public Task<bool> StudentExistsAsync(string fullName, int? excludedId = null)
+        {
+            return _dbContext.Student.AnyAsync(student =>
+                student.FullName == fullName && (!excludedId.HasValue || student.Id != excludedId.Value));
+        }
+
+        public async Task<Student> CreateStudentAsync(Student student)
+        {
+            _dbContext.Student.Add(student);
+            await _dbContext.SaveChangesAsync();
+            return student;
+        }
+
+        public async Task UpdateStudentAsync(Student student)
+        {
+            _dbContext.Student.Update(student);
+            await _dbContext.SaveChangesAsync();
+        }
+
+        public Task<bool> HasEnrollmentsAsync(int studentId)
+        {
+            return _dbContext.Enrollment.AnyAsync(enrollment => enrollment.StudentId == studentId);
+        }
+
+        public async Task<bool> DeleteStudentAsync(int id)
+        {
+            var student = await GetStudentByIdAsync(id);
+            if (student == null || await HasEnrollmentsAsync(id))
+                return false;
+
+            _dbContext.Student.Remove(student);
+            await _dbContext.SaveChangesAsync();
+            return true;
+        }
     }
 }

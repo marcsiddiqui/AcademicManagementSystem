@@ -1,5 +1,6 @@
 ﻿using AcademicManagementSystem.DatabaseConfiguration;
 using AcademicManagementSystem.Models;
+using AcademicManagementSystem.Services;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -16,14 +17,17 @@ namespace AcademicManagementSystem.Controllers
     {
         private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
+        private readonly IStudentService _studentService;
 
         public EnrollmentController(
             ApplicationDbContext dbContext,
-            IMapper mapper
+            IMapper mapper,
+            IStudentService studentService
             )
         {
             _dbContext = dbContext;
             _mapper = mapper;
+            _studentService = studentService;
         }
 
         public IActionResult Index()
@@ -31,34 +35,6 @@ namespace AcademicManagementSystem.Controllers
             var model = new EnrollmentListModel();
 
             #region With Join
-
-#if false
-
-            var data_list = from e in _dbContext.Enrollment
-                       join s in _dbContext.Student on e.StudentId equals s.Id
-                       join c in _dbContext.Courses on e.CourseId equals c.Id
-                       select new { e.Id, e.EnrollmentDate, e.Status, e.IsActive, StudentName = s.FullName, CourseName = c.Name, c.Fee };
-
-            if (data_list != null && data_list.Any())
-            {
-                foreach (var data in data_list)
-                {
-                    var enrollmentModel = new EnrollmentModel
-                    {
-                        Id = data.Id,
-                        StudentName = data.StudentName,
-                        CourseName = data.CourseName,
-                        EnrollmentDate = data.EnrollmentDate,
-                        Status = data.Status,
-                        IsActive = data.IsActive,
-                        Fee = data.Fee
-                    };
-
-                    model.Enrollments.Add(enrollmentModel);
-                }
-            }
-
-#endif
 
             #endregion
 
@@ -80,7 +56,7 @@ namespace AcademicManagementSystem.Controllers
 
             model.EnrollmentDate = DateTime.Now;
 
-            PrepareAvailableStudents(model);
+            await PrepareAvailableStudentsAsync(model);
             PrepareAvailableCourses(model);
 
             return View(model);
@@ -104,7 +80,7 @@ namespace AcademicManagementSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            PrepareAvailableStudents(model);
+            await PrepareAvailableStudentsAsync(model);
             PrepareAvailableCourses(model);
 
             return View(model);
@@ -121,7 +97,7 @@ namespace AcademicManagementSystem.Controllers
 
             var model = _mapper.Map<EnrollmentModel>(course);
 
-            PrepareAvailableStudents(model);
+            await PrepareAvailableStudentsAsync(model);
             PrepareAvailableCourses(model);
 
             return View(model);
@@ -148,7 +124,7 @@ namespace AcademicManagementSystem.Controllers
                 return RedirectToAction("Index");
             }
 
-            PrepareAvailableStudents(model);
+            await PrepareAvailableStudentsAsync(model);
             PrepareAvailableCourses(model);
 
             return View(model);
@@ -181,9 +157,9 @@ namespace AcademicManagementSystem.Controllers
             return RedirectToAction("Index");
         }
 
-        public void PrepareAvailableStudents(EnrollmentModel model)
+        public async Task PrepareAvailableStudentsAsync(EnrollmentModel model)
         {
-            var students = _dbContext.Student.Where(x => x.IsActive).ToList();
+            var students = await _studentService.GetActiveStudentsAsync();
 
             model.AvailableStudents.Add(new SelectListItem
             {
@@ -191,7 +167,7 @@ namespace AcademicManagementSystem.Controllers
                 Text = "Select Student"
             });
 
-            if (students != null && students.Any())
+            if (students.Any())
             {
                 model.AvailableStudents.AddRange(students.Select(s =>
                 new SelectListItem

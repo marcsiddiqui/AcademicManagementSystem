@@ -5,9 +5,6 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Identity.Client;
-using Microsoft.Identity.Client.NativeInterop;
 using System.Security.Claims;
 using System.Text.RegularExpressions;
 
@@ -16,7 +13,6 @@ namespace AcademicManagementSystem.Controllers
     [Authorize]
     public class StudentController : Controller
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly IMapper _mapper;
         private readonly IStudentService _studentService;
         private readonly ILogger<StudentController> _logger;
@@ -24,13 +20,11 @@ namespace AcademicManagementSystem.Controllers
         const int PageSize = 10;
 
         public StudentController(
-            ApplicationDbContext dbContext,
             IMapper mapper,
             IStudentService studentService,
             ILogger<StudentController> logger
             )
         {
-            _dbContext = dbContext;
             _mapper = mapper;
             _studentService = studentService;
             _logger = logger;
@@ -38,10 +32,6 @@ namespace AcademicManagementSystem.Controllers
 
         public async Task<IActionResult> Index(StudentListModel model)
         {
-            //var data = _dbContext.Student.FromSqlRaw("SELECT * FROM Student Where Id = 7").ToList();
-
-            //await _dbContext.Database.ExecuteSqlRawAsync("Update student set isactive = 0");
-
             var pagedData = await _studentService.GetAllStudentsAsync(
                 search: model.SearchText,
                 status: model.StatusId,
@@ -92,7 +82,7 @@ namespace AcademicManagementSystem.Controllers
             if (!isValid)
                 ModelState.AddModelError(nameof(model.StudentFullName), "Invalid Full Name!");
 
-            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.StudentFullName);
+            bool existingStudent = await _studentService.StudentExistsAsync(model.StudentFullName);
             if (existingStudent)
                 ModelState.AddModelError(nameof(model.StudentFullName), "Student already exists!");
 
@@ -107,8 +97,7 @@ namespace AcademicManagementSystem.Controllers
                     student.CreatedBy = userId;
                     student.CreatedOnUtc = DateTime.UtcNow;
 
-                    _dbContext.Student.Add(student);
-                    _dbContext.SaveChanges();
+                    await _studentService.CreateStudentAsync(student);
 
                     _logger.LogInformation("Student created successfully. Student ID: {StudentId}, Created By User ID: {UserId}", student.Id, userId);
 
@@ -128,7 +117,7 @@ namespace AcademicManagementSystem.Controllers
             if (id <= 0)
                 return RedirectToAction("Index");
 
-            var student = await _dbContext.Student.FindAsync(id);
+            var student = await _studentService.GetStudentByIdAsync(id);
             if (student == null)
                 return RedirectToAction("Index");
 
@@ -146,11 +135,11 @@ namespace AcademicManagementSystem.Controllers
             if (!isValid)
                 ModelState.AddModelError(nameof(model.StudentFullName), "Invalid Full Name!");
 
-            bool existingStudent = await _dbContext.Student.AnyAsync(d => d.FullName == model.StudentFullName && d.Id != model.Id);
+            bool existingStudent = await _studentService.StudentExistsAsync(model.StudentFullName, model.Id);
             if (existingStudent)
                 ModelState.AddModelError(nameof(model.StudentFullName), "Student already exists!");
 
-            var student = await _dbContext.Student.FindAsync(model.Id);
+            var student = await _studentService.GetStudentByIdAsync(model.Id);
             if (student == null)
                 return RedirectToAction("Index");
 
@@ -166,7 +155,7 @@ namespace AcademicManagementSystem.Controllers
                 student.UpdatedBy = userId;
                 student.UpdatedOnUtc = DateTime.UtcNow;
 
-                _dbContext.SaveChanges();
+                await _studentService.UpdateStudentAsync(student);
 
                 return RedirectToAction("Index");
             }
@@ -179,11 +168,11 @@ namespace AcademicManagementSystem.Controllers
             if (id == null)
                 return RedirectToAction("Index");
 
-            var student = await _dbContext.Student.FindAsync(id);
+            var student = await _studentService.GetStudentByIdAsync(id.Value);
             if (student == null)
                 return RedirectToAction("Index");
 
-            var existingEnrollments = _dbContext.Enrollment.Any(x => x.StudentId == student.Id);
+            var existingEnrollments = await _studentService.HasEnrollmentsAsync(student.Id);
             if (existingEnrollments)
                 return RedirectToAction("Index");
 
@@ -195,12 +184,7 @@ namespace AcademicManagementSystem.Controllers
         [HttpPost]
         public async Task<IActionResult> Delete(StudentModel model)
         {
-            var student = await _dbContext.Student.FindAsync(model.Id);
-            if (student == null)
-                return RedirectToAction("Index");
-
-            _dbContext.Student.Remove(student);
-            _dbContext.SaveChanges();
+            await _studentService.DeleteStudentAsync(model.Id);
 
             return RedirectToAction("Index");
         }
